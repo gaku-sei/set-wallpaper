@@ -24,8 +24,8 @@ pub fn download_file(url: &Url) -> IoResult<Box<Path>> {
     let res = try!(socket.read_to_end());
 
     //Find the good folder and picture name here:
-    let filepath = box os::homedir().unwrap().join_many(["Pictures", "foobar"]);
-    //let filepath = box os::tmpdir().join(Path::new("foobar"));
+    let filepath = box os::homedir().unwrap().join_many(["Pictures", "wallpaper"]);
+    //let filepath = box os::tmpdir().join(Path::new("wallpaper"));
     let mut file = File::create(filepath);
     let res_without_headers = without_headers(&res);
     try!(file.write(res_without_headers.as_slice()));
