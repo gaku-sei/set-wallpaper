@@ -37,7 +37,7 @@ fn exec(arg: &String) -> SqliteResult<()> {
 fn print_usage(program: &String, opts: &[OptGroup]) {
     println!("Usage: {} [/path/to/picture|url]", program);
     for opt in opts.iter() {
-        println!("{} {}\t{}", opt.short_name, opt.long_name, opt.desc);
+        println!("-{} --{}\t{}", opt.short_name, opt.long_name, opt.desc);
     }
 }
 
