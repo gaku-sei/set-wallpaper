@@ -2,8 +2,13 @@ extern crate sqlite3;
 
 use std::os;
 use url::Url;
-use std::io::{IoResult, TcpStream, File};
+use std::io::{IoResult, TcpStream, File, Command};
 use sqlite3::{SqliteResult};
+
+pub fn kill_dock() -> IoResult<()> {
+    try!(Command::new("killall").arg("Dock").spawn());
+    Ok(())
+}
 
 pub fn update_desktop_db(path_to_img: &Path) -> SqliteResult<()> {
     //unwrap, unwrap, unwrap... consider using match

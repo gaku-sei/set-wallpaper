@@ -3,11 +3,13 @@
 extern crate regex_macros;
 extern crate regex;
 extern crate url;
+extern crate getopts;
 
 extern crate sqlite3;
 
 use std::os;
 use url::Url;
+use getopts::{Matches, optflag, getopts};
 use sqlite3::{SqliteResult};
 
 mod io;
@@ -29,21 +31,22 @@ fn exec(arg: &String) -> SqliteResult<()> {
     Ok(try!(io::update_desktop_db(path)))
 }
 
-#[allow(unused_must_use)]
-fn main() {
+fn extract_args() -> (Matches, Vec<String>) {
     let args = os::args();
-    if args.len() > 1 {
-        exec(args.get(1));
+    let opts = [ optflag("k", "kill", "Killall Dock") ];
+    match getopts(args.tail(), opts) {
+        Ok(m) => (m.clone(), m.free),
+        Err(f) => fail!(f.to_string())
     }
 }
-/*fn main() {
-    let args = os::args();
-    if args.len() > 1 {
-        match exec(args.get(1)) {
-            Ok(..) => println!("Done"),
-            Err(e) => fail!("Error: {}", e)
+
+#[allow(unused_must_use)]
+fn main() {
+    let (matches, args) = extract_args();
+    if args.len() > 0 {
+        exec(args.get(0));
+        if matches.opt_present("k") {
+            io::kill_dock();
         }
-    } else {
-        fail!("You should give one argument.");
     }
-}*/
+}
