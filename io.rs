@@ -19,7 +19,7 @@ pub fn update_desktop_db(path_to_img: &Path) -> SqliteResult<()> {
     Ok(())
 }
 
-pub fn download_file(url: &Url) -> IoResult<Box<Path>> {
+pub fn download_file(url: &Url) -> IoResult<Path> {
     let mut socket = try!(TcpStream::connect(url.host.as_slice(), 80));
     let req = format!(
         "GET {:s} HTTP/1.1\r\nHost: {:s}\r\nAccept: */*\r\n\r\n",
@@ -29,16 +29,16 @@ pub fn download_file(url: &Url) -> IoResult<Box<Path>> {
     let res = try!(socket.read_to_end());
 
     //Find the good folder and picture name here:
-    let filepath = box os::homedir().unwrap().join_many(["Pictures", "wallpaper"]);
-    //let filepath = box os::tmpdir().join(Path::new("wallpaper"));
-    let mut file = File::create(filepath);
+    let filepath = os::homedir().unwrap().join_many(["Pictures", "wallpaper"]);
+    //let filepath = os::tmpdir().join("wallpaper");
+    let mut file = File::create(&filepath);
     let res_without_headers = without_headers(&res);
     try!(file.write(res_without_headers.as_slice()));
     Ok(filepath)
 }
 
-fn without_headers(vec: &Vec<u8>) -> Box<Vec<u8>> {
-    let mut new_vec = box Vec::new();
+fn without_headers(vec: &Vec<u8>) -> Vec<u8> {
+    let mut new_vec = Vec::new();
     let mut acc = 0u;
     for b in vec.iter() {
         if acc == 4 {

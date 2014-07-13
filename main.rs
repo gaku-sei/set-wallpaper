@@ -26,9 +26,9 @@ fn exec(arg: &String) -> SqliteResult<()> {
                 Err(e) => fail!("Url Error: {}", e)
             }
         } else {
-            box Path::new(arg.as_slice())
+            Path::new(arg.as_slice())
         };
-    Ok(try!(io::update_desktop_db(path)))
+    Ok(try!(io::update_desktop_db(&path)))
 }
 
 fn extract_args() -> (Matches, Vec<String>) {
