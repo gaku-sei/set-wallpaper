@@ -20,7 +20,6 @@ pub fn update_desktop_db(path_to_img: &Path) -> SqliteResult<()> {
     Ok(())
 }
 
-//Split this function
 pub fn download_file(url: &Url) -> IoResult<Path> {
     let mut socket = try!(TcpStream::connect(url.host.as_slice(), 80));
     let req = format!(
@@ -28,8 +27,11 @@ pub fn download_file(url: &Url) -> IoResult<Path> {
         url.path.path.as_slice(), url.host
     );
     try!(socket.write(req.as_bytes()));
-    let res = try!(socket.read_to_end());
+    let res_without_headers = without_headers(&try!(socket.read_to_end()));
+    write_to_file(res_without_headers.as_slice())
+}
 
+fn write_to_file(data: &[u8]) -> IoResult<Path> {
     let dirpath = os::homedir().unwrap().join_many(["Library", "wallpaper"]);
     if !dirpath.exists() {
         try!(fs::mkdir(&dirpath, UserRWX));
@@ -37,8 +39,7 @@ pub fn download_file(url: &Url) -> IoResult<Path> {
     let ts = time::now().to_timespec();
     let filepath = dirpath.join(format!("wall-{:d}-{:d}", ts.sec, ts.nsec));
     let mut file = File::create(&filepath);
-    let res_without_headers = without_headers(&res);
-    try!(file.write(res_without_headers.as_slice()));
+    try!(file.write(data));
     Ok(filepath)
 }
 

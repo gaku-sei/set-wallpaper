@@ -38,6 +38,7 @@ fn print_usage(program: &String, opts: &[OptGroup]) {
     }
 }
 
+//Clean && Deal with errors
 #[allow(unused_must_use)]
 fn main() {
     let raw_args = os::args();
