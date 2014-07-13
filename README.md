@@ -19,4 +19,6 @@ The binary is available in the target directory.
 /path/to/bin/set-wallpaper [path/to/picture|url]
 # You can also use the -k or --kill option to automatically kill the dock and relaunch it:
 /path/to/bin/set-wallpaper -k [path/to/picture|url]
+# Additionally you can get help with:
+/path/to/bin/set-wallpaper -h
 ```
