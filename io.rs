@@ -3,26 +3,24 @@ extern crate time;
 
 use std::os;
 use url::Url;
-use std::io::{IoResult, TcpStream, File, Command, UserRWX};
+use std::io::{IoResult, TcpStream, File, Command, UserRWX, Process};
 use std::io::fs;
 use sqlite3::{SqliteResult};
 
 //Kill the dock the hard way
-pub fn kill_dock() -> IoResult<()> {
-    try!(Command::new("killall").arg("Dock").spawn());
-    Ok(())
+pub fn kill_dock() -> IoResult<Process> {
+    Command::new("killall").arg("Dock").spawn()
 }
 
 //Write the new wallpaper path to the db
-pub fn update_desktop_db(path_to_img: &Path) -> SqliteResult<()> {
+pub fn update_desktop_db(path_to_img: &Path) -> SqliteResult<bool> {
     //The path to db is ~/Library/Application Support/Dock/desktoppicture.db
     let path_to_db = os::homedir().unwrap().join_many(["Library", "Application Support", "Dock", "desktoppicture.db"]);
     //Open the db and set the query
     let db = try!(sqlite3::open(path_to_db.as_str().unwrap()));
     let query = format!("UPDATE data SET value='{}';", path_to_img.as_str().unwrap());
     //Make the update
-    try!(db.exec(query.as_slice()));
-    Ok(())
+    Ok(try!(db.exec(query.as_slice())))
 }
 
 pub fn download_file(url: &Url) -> IoResult<Path> {
