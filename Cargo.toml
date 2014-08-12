@@ -1,0 +1,7 @@
+[package]
+name = "wall"
+version = "0.1.0"
+authors = [ "Kevin Combriat <japan.combriat.kevin@gmail.com>" ]
+
+[dependencies.sqlite3]
+git = "https://github.com/linuxfood/rustsqlite.git"

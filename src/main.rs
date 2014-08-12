@@ -46,7 +46,7 @@ fn print_usage(program: &String, opts: &[OptGroup]) {
 fn main() {
     //Reading arguments and declaring options
     let raw_args = os::args();
-    let program = raw_args.get(0).clone();
+    let program = raw_args[0].clone();
 
     let opts = [
         optflag("k", "kill", "refresh the ui with `killall dock`"),
@@ -67,7 +67,7 @@ fn main() {
 
     //Main function call
     if args.len() > 0 {
-        exec(args.get(0));//print errors
+        exec(&args[0]);//print errors
         //Kill dock if -k flag is provided
         if matches.opt_present("k") {
             io::kill_dock();//print errors
